@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="/assets/jquery.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Merriweather:ital,wght@1,300&family=Playfair+Display&family=Roboto+Slab:wght@300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
+
+
+<style>
+body {
+  font-family: 'Merriweather', serif;
+  margin: 0 auto;
+  max-width: 600px;
+  background: #4354;
+}
+div {
+  height: 300px;
+  background-size: cover;
+  position: relative;
+  margin: 40px 0 0 0;
+  border-radius: 12px;
+}
+h1 {
+  font-family: 'Playfair Display', serif;
+  text-align: center;
+  font-size: 75px;
+  color: #4349;
+  margin: 60px 0 0 0;
+}
+h2 {
+  font-family: 'Lora', serif;
+  text-align: center;
+  color: #596487;
+  margin: 0px 0 70px 0;
+}
+p {
+  color: rgba(25,4,130,1);
+  background: black;
+  background: linear-gradient(bottom, rgba(119,107,93,1), rgba(124,129,173,.4));
+  background: -webkit-linear-gradient(bottom, rgba(96,129,173,1), rgba(129,143,180,.4));
+  background: -moz-linear-gradient(bottom, rgba(129,143,180,1), rgba(245,232,199,.4));
+  padding: 10px;
+  line-height: 28px;
+  text-align: justify;
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  height: 30px;
+  transition: height .5s;
+  -webkit-transition: height .5s;
+  -moz-transition: height .5s;
+}
+
+small {
+  opacity: 0;
+}
+
+.show-description p {
+  height: 150px;
+}
+
+.show-description small {
+  opacity: 1;
+}
+
+.first{
+  background-image: url("https://www.parisbaguette.com/wp-content/uploads/chocolate-cake.png");
+}
+.second{
+  background-image: url("https://s3-media0.fl.yelpcdn.com/bphoto/U0D0C3nwcRVjXFl3TRYkjA/l.jpg");
+}
+.dessert{
+  background-image: url("https://www.piesandtacos.com/wp-content/uploads/2023/06/pastries-3-scaled.jpg");
+}
+.price {
+  float: right;
+}
+input {
+	font-size: 22px;
+}
+
+
+@media (max-width: 500px) {
+  h1 {
+    font-size: 50px;
+    margin-top: 20px;
+    line-height: 40px;
+  }
+  h2 {
+    font-size: 20px;
+    margin: 20px 0 30px 0;
+  }
+  div {
+    margin: 20px 12px 0 12px;
+  }
+  p {
+    font-size: 20px;
+    line-height: 24px;
+  }
+  small {
+    font-size: 16px;
+  }
+}
+
+</style>
+
+</head>
+
+<body>
+<h1>Paris Bakery</h1>
+<h2>Bakery and Cafe</h2>
+<div class="first">
+	<input class="quantities" min="0" style="width: 50px">
+  <p>Chocolate Strawberry Cake<span class="price">$28</span><br />
+  <small>Made with two layers of rich chocolate cake, frosted with strawberry frosting and filled with fresh strawberries, this chocolate strawberry cake is as delicious as it is beautiful. </small></p>
+</div>
+
+<div class="second">
+	<input class="quantities" min="0" style="width: 50px">
+  <p>Strawberry Soft Cream Cake <span class="price">$22</span><br />
+  <small>it’s super light and fluffy, with a light cream frosting that’s not too sweet. You’ll feel like you’re biting into a cloud as you enjoy the freshness of the ingredients.</small></p>
+</div>
+  
+<div class="dessert">
+	<input class="quantities" min="0" style="width: 50px">
+  <p>pastries <span class="price">$10</span><br />
+  <small>a baked food made with a dough of flour, water and shortening that may be savoury or sweetened..</small></p>
+</div></div>
+<br><br>
+<input id="Name" placeholder="Your name">
+  <input id="Email" placeholder="Your Email">
+  <input id="submit" type="submit">
+<br><br>
+
+<script>
+  $('div').on('click', function() {
+      $(this).toggleClass('show-description');
+  });
+</script>
+
+</body>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCIVLeVkKB6KXdV6RF5rr1lJAqI80ifIms",
+    authDomain: "sapphiredash3-5373c.firebaseapp.com",
+    projectId: "sapphiredash3-5373c",
+    storageBucket: "sapphiredash3-5373c.appspot.com",
+    messagingSenderId: "914279611073",
+    appId: "1:914279611073:web:c2204b71b8d3dda23bf240"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  
+const Name = document.querySelector("#Name") 
+const Email = document.querySelector("#Email")
+  const quantities = document.querySelectorAll(".quantities")
+  const itemsList = ["Chocolate Strawberry Cake", "Strawberry soft Cream Cake", "Pastries"]
+  const timestamp = buildTimestamp()
+  document.querySelector('#submit').addEventListener('click', Submit)
+  const prices = document.querySelectorAll(".price")
+	
+	function Submit() {
+		  const timestamp = buildTimestamp()
+		
+  	  let total = 0
+  	  let cart = { }
+  		  for  (let i=0; i<quantities.length; i=i+1) {
+  		  	if (quantities[i].value != "0" && quantities[i].value != "") {	
+  			let price = prices[i].innerHTML.replace('$', '')
+  			  total = total + quantities[i].value * price
+  			  cart[itemsList[i]] = parseInt(quantities[i].value) 
+  		  	}
+  		  	quantities[i].value = ""
+  		  }
+	  
+		  set(ref(db, timestamp), {
+			  Name: Name.value,
+		      email: Email.value,
+			  cart: cart,
+              totalPrice: total,
+		      paid: "not yet",
+		  });
+
+		  Name.value = ""
+		  Email.value = ""
+		}
+		function buildTimestamp() {
+			  const now = new Date();
+			  let timestamp = now.getFullYear().toString() + "/";
+			  //const month = now.toLocaleString('default', { month: 'long' });
+
+			  let month = now.getMonth()+1   //add 1 because Javascript uses 0 for January
+			  month = month.toString()
+			  month = addLeadingZero(month)
+			  timestamp += month + "/"; 
+
+			  let date = now.getDate().toString()
+			  date = addLeadingZero(date)
+			  timestamp += date + "/";
+
+			  let hours = now.getHours().toString()
+			  hours = addLeadingZero(hours)
+			  timestamp += hours + ":";
+
+			  let minutes = now.getMinutes().toString()
+			  minutes = addLeadingZero(minutes)
+			  timestamp += minutes + ":";
+
+			  let seconds = now.getSeconds().toString()
+			  seconds = addLeadingZero(seconds)
+			  timestamp += seconds;
+  
+			  return timestamp
+			}
+	
+			function addLeadingZero(units) {
+				if (units.length < 2) {
+					units = "0" + units
+				}
+				return units
+			}
+  
+</script>
